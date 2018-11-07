@@ -155,7 +155,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/category" />
 
-                        <fragment android:name="ch.beerpro.presentation.ratings.RatingsFragmentAdd"
+                        <FrameLayout
                             android:id="@+id/ratingFragment"
 
                             android:layout_width="match_parent"

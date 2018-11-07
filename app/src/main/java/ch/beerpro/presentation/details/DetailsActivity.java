@@ -2,6 +2,7 @@ package ch.beerpro.presentation.details;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
@@ -27,10 +29,13 @@ import ch.beerpro.domain.models.Rating;
 import ch.beerpro.domain.models.Wish;
 import ch.beerpro.presentation.details.createrating.CreateRatingActivity;
 import ch.beerpro.presentation.ratings.RatingsFragmentAdd;
+import ch.beerpro.presentation.ratings.RatingsFragmentDetails;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +43,8 @@ import java.util.List;
 import static ch.beerpro.presentation.utils.DrawableHelpers.setDrawableTint;
 
 public class DetailsActivity extends AppCompatActivity
-                             implements OnRatingLikedListener,
-                                        RatingsFragmentAdd.OnRatingGivenListener {
+        implements OnRatingLikedListener,
+        RatingsFragmentAdd.OnRatingGivenListener {
 
     public static final String ITEM_ID = "item_id";
     private static final String TAG = "DetailsActivity";
@@ -80,9 +85,12 @@ public class DetailsActivity extends AppCompatActivity
 
     private DetailsViewModel model;
 
+    private FirebaseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
@@ -99,6 +107,15 @@ public class DetailsActivity extends AppCompatActivity
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+        //whoami
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        //Set fragment to the star-thingy
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.ratingFragment, new RatingsFragmentAdd())
+                .commit();
 
         adapter = new RatingsRecyclerViewAdapter(this, model.getCurrentUser());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, layoutManager.getOrientation()));
@@ -155,6 +172,26 @@ public class DetailsActivity extends AppCompatActivity
 
     private void updateRatings(List<Rating> ratings) {
         adapter.submitList(new ArrayList<>(ratings));
+
+        Rating newestRating = null;
+        for (Rating rating : ratings) {
+            //1. if any rating is from me
+            //2. set my newest
+            if (user.getUid().equals(rating.getUserId())
+                    && (newestRating == null || rating.getCreationDate().after(newestRating.getCreationDate()))) {
+                newestRating = rating;
+            }
+        }
+
+        if(newestRating != null) { //null means we have no ratings
+            //3. display it
+            RatingsFragmentDetails detailsFragment = new RatingsFragmentDetails();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.ratingFragment, detailsFragment)
+                    .commit();
+            detailsFragment.setRating(newestRating);
+        }
     }
 
     @Override
