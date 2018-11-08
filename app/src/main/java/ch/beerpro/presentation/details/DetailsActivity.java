@@ -2,6 +2,7 @@ package ch.beerpro.presentation.details;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
@@ -26,16 +28,23 @@ import ch.beerpro.domain.models.Beer;
 import ch.beerpro.domain.models.Rating;
 import ch.beerpro.domain.models.Wish;
 import ch.beerpro.presentation.details.createrating.CreateRatingActivity;
+import ch.beerpro.presentation.ratings.RatingsFragmentAdd;
+import ch.beerpro.presentation.ratings.RatingsFragmentDetails;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static ch.beerpro.presentation.utils.DrawableHelpers.setDrawableTint;
 
-public class DetailsActivity extends AppCompatActivity implements OnRatingLikedListener {
+public class DetailsActivity extends AppCompatActivity
+        implements OnRatingLikedListener,
+        RatingsFragmentAdd.OnRatingGivenListener {
 
     public static final String ITEM_ID = "item_id";
     private static final String TAG = "DetailsActivity";
@@ -69,9 +78,6 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
     @BindView(R.id.category)
     TextView category;
 
-    @BindView(R.id.addRatingBar)
-    RatingBar addRatingBar;
-
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
@@ -79,9 +85,12 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
 
     private DetailsViewModel model;
 
+    private FirebaseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
@@ -99,6 +108,15 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        //whoami
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        //Set fragment to the star-thingy
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.ratingFragment, new RatingsFragmentAdd())
+                .commit();
+
         adapter = new RatingsRecyclerViewAdapter(this, model.getCurrentUser());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, layoutManager.getOrientation()));
 
@@ -107,14 +125,13 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         model.getWish().observe(this, this::toggleWishlistView);
 
         recyclerView.setAdapter(adapter);
-        addRatingBar.setOnRatingBarChangeListener(this::addNewRating);
     }
 
-    private void addNewRating(RatingBar ratingBar, float v, boolean b) {
+    public void addNewRating(RatingBar ratingBar, float v, boolean b) {
         Intent intent = new Intent(this, CreateRatingActivity.class);
         intent.putExtra(CreateRatingActivity.ITEM, model.getBeer().getValue());
         intent.putExtra(CreateRatingActivity.RATING, v);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, addRatingBar, "rating");
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, ratingBar, "rating");
         startActivity(intent, options.toBundle());
     }
 
@@ -125,6 +142,19 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         dialog.setContentView(view);
         dialog.show();
+
+        //set listeners for buttons
+        //TODO Ort Hinzufügen
+
+        //TODO Meinen Preis Hinzufügen
+
+        //TODO In Den  Kühlschrank
+
+        //TODO Private Notiz Hinzufügen
+
+        //Neue Bewertung
+        RatingBar addRatingBar_popup = dialog.findViewById(R.id.addRatingBar_popup);
+        addRatingBar_popup.setOnRatingBarChangeListener(this::addNewRating);
     }
 
     private void updateBeer(Beer item) {
@@ -143,11 +173,36 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
 
     private void updateRatings(List<Rating> ratings) {
         adapter.submitList(new ArrayList<>(ratings));
+
+        Rating newestRating = null;
+        for (Rating rating : ratings) {
+            //1. if any rating is from me
+            //2. set my newest
+            if (user.getUid().equals(rating.getUserId())
+                    && (newestRating == null || rating.getCreationDate().after(newestRating.getCreationDate()))) {
+                newestRating = rating;
+            }
+        }
+
+        if(newestRating != null) { //null means we have no ratings
+            //3. display it
+            RatingsFragmentDetails detailsFragment = new RatingsFragmentDetails();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.ratingFragment, detailsFragment)
+                    .commit();
+            detailsFragment.setRating(newestRating);
+        }
     }
 
     @Override
     public void onRatingLikedListener(Rating rating) {
         model.toggleLike(rating);
+    }
+
+    @Override
+    public void onNewRating(RatingBar ratingBar, float v, boolean b) {
+        addNewRating(ratingBar, v, b);
     }
 
     @OnClick(R.id.wishlist)
