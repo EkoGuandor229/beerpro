@@ -1,10 +1,13 @@
 package ch.beerpro.presentation.details;
 
+import android.view.View;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import ch.beerpro.data.repositories.*;
 import ch.beerpro.domain.models.Beer;
+import ch.beerpro.domain.models.Fridge;
 import ch.beerpro.domain.models.Rating;
 import ch.beerpro.domain.models.Wish;
 import com.google.android.gms.tasks.Task;
@@ -20,6 +23,7 @@ public class DetailsViewModel extends ViewModel implements CurrentUser {
 
     private final LikesRepository likesRepository;
     private final WishlistRepository wishlistRepository;
+    private final FridgeRepository fridgeRepository;
 
     public DetailsViewModel() {
         // TODO We should really be injecting these!
@@ -27,6 +31,7 @@ public class DetailsViewModel extends ViewModel implements CurrentUser {
         RatingsRepository ratingsRepository = new RatingsRepository();
         likesRepository = new LikesRepository();
         wishlistRepository = new WishlistRepository();
+        fridgeRepository = new FridgeRepository();
 
         MutableLiveData<String> currentUserId = new MutableLiveData<>();
         beer = beersRepository.getBeer(beerId);
@@ -58,4 +63,9 @@ public class DetailsViewModel extends ViewModel implements CurrentUser {
     public Task<Void> toggleItemInWishlist(String itemId) {
         return wishlistRepository.toggleUserWishlistItem(getCurrentUser().getUid(), itemId);
     }
+
+    public void addToFridge(View v) {
+        fridgeRepository.addBeer(beer.getValue(), getCurrentUser().getUid());
+    }
+
 }
