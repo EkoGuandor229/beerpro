@@ -156,16 +156,108 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ratingText" />
 
+            <TextView
+                android:id="@+id/bitternessLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:text="Bitterkeit"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ratingText"
+                />
+
+            <RatingBar
+                android:id="@+id/bitternessRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+
+                android:isIndicator="false"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="1"
+                android:theme="@style/RatingBar"
+                android:transitionName="rating"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bitternessLabel" />
+
+            <TextView
+                android:id="@+id/headacheLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:text="Kopfweh-Faktor"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bitternessRating"
+                />
+
+            <RatingBar
+                android:id="@+id/headacheRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+
+                android:isIndicator="false"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="1"
+                android:theme="@style/RatingBar"
+                android:transitionName="rating"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/headacheLabel" />
+
+            <TextView
+                android:id="@+id/aromaLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:text="Aroma"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/headacheRating"
+                />
+
+            <Spinner
+                android:id="@+id/aromaSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/aromaLabel"
+
+                android:entries="@array/aromas" />
+
+            <View
+                android:id="@+id/separator6"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#ffeeeeee"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/aromaSpinner" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/separator5">
+                app:layout_constraintTop_toBottomOf="@+id/separator6">
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/placePickButton"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

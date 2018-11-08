@@ -103,4 +103,14 @@
     <string name="title_activity_myratings">Meine Bewertungen</string>
     <string name="title_activity_mybeers">Meine Biere</string>
     <string name="action_search">Bier suchen</string>
+
+    <string-array name="aromas">
+        <item>n/a</item>
+        <item>süss</item>
+        <item>sauer</item>
+        <item>fruchtig</item>
+        <item>herb</item>
+        <item>leicht</item>
+        <item>schwer</item>
+    </string-array>
 </resources>

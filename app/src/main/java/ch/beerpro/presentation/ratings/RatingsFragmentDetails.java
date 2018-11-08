@@ -41,6 +41,15 @@ public class RatingsFragmentDetails extends Fragment {
     @BindView(R.id.ratingPlace)
     TextView ratingPlace;
 
+    @BindView(R.id.bitternessValue)
+    TextView bitternessValue;
+
+    @BindView(R.id.headacheValue)
+    TextView headacheValue;
+
+    @BindView(R.id.aromaValue)
+    TextView aromaValue;
+
     @Setter
     private Rating rating;
 
@@ -56,7 +65,18 @@ public class RatingsFragmentDetails extends Fragment {
         ratingBar.setRating(rating.getRating());
         GlideApp.with(this).load(rating.getUserPhoto()).apply(new RequestOptions().centerInside()).into(avatar);
         ratingText.setText(rating.getComment());
-        //TODO set place
+        if(rating.getPlaceName() != null && !rating.getPlaceName().isEmpty()) {
+            ratingPlace.setText(rating.getPlaceName());
+        }
+        if(rating.getBitterness() > 0) {
+            bitternessValue.setText("" + rating.getBitterness());
+        }
+        if(rating.getHeadacheFactor() > 0) {
+            headacheValue.setText("" + rating.getHeadacheFactor());
+        }
+        if(rating.getAroma() != null && !rating.getAroma().isEmpty()) {
+            aromaValue.setText("" + rating.getAroma());
+        }
     }
 
     @Override

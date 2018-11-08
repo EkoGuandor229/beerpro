@@ -93,6 +93,18 @@ public class MyRatingsRecyclerViewAdapter
         @BindView(R.id.photo)
         ImageView photo;
 
+        @BindView(R.id.locationText)
+        TextView locationText;
+
+        @BindView(R.id.bitternessValue)
+        TextView bitternessValue;
+
+        @BindView(R.id.headacheValue)
+        TextView headacheValue;
+
+        @BindView(R.id.aromaValue)
+        TextView aromaValue;
+
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, itemView);
@@ -121,6 +133,20 @@ public class MyRatingsRecyclerViewAdapter
             GlideApp.with(itemView).load(item.getUserPhoto()).apply(new RequestOptions().circleCrop()).into(avatar);
 
             numLikes.setText(itemView.getResources().getString(R.string.fmt_num_ratings, item.getLikes().size()));
+
+            if(item.getPlaceName() != null && !item.getPlaceName().isEmpty()) {
+                locationText.setText(item.getPlaceName());
+            }
+
+            if(item.getBitterness() > 0) {
+                bitternessValue.setText("" + item.getBitterness());
+            }
+            if(item.getHeadacheFactor() > 0) {
+                headacheValue.setText("" + item.getHeadacheFactor());
+            }
+            if(item.getAroma() != null && !item.getAroma().isEmpty()) {
+                aromaValue.setText("" + item.getAroma());
+            }
 
             // don't need it here
             like.setVisibility(View.GONE);

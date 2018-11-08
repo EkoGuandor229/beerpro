@@ -111,7 +111,100 @@
             app:layout_constraintBottom_toTopOf="@+id/actionsLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addRatingExplanation" />
+            app:layout_constraintTop_toBottomOf="@+id/additionalRatings" />
+
+        <TextView
+            android:id="@+id/locationText"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="Kein Ort angegeben"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/photo"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <GridLayout
+            android:id="@+id/additionalRatings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:numColumns="2"
+            android:orientation="horizontal"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/avatar">
+
+            <!-- LABELS -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="Bitterness"
+
+                android:layout_row="0"
+                android:layout_column="0"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="Headacheyness"
+
+                android:layout_row="1"
+                android:layout_column="0"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="Aroma"
+
+                android:layout_row="2"
+                android:layout_column="0"
+                />
+
+            <!-- CONTENTS -->
+            <TextView
+                android:id="@+id/bitternessValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="n/a"
+                android:layout_marginLeft="10sp"
+
+                android:layout_row="0"
+                android:layout_column="1"
+                />
+
+            <TextView
+                android:id="@+id/headacheValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="n/a"
+                android:layout_marginLeft="10sp"
+
+                android:layout_row="1"
+                android:layout_column="1"
+                />
+
+            <TextView
+                android:id="@+id/aromaValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="n/a"
+                android:layout_marginLeft="10sp"
+
+                android:layout_row="2"
+                android:layout_column="1"
+                />
+        </GridLayout>
 
         <LinearLayout
             android:id="@+id/actionsLayout"
@@ -121,7 +214,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/avatar">
+            app:layout_constraintTop_toBottomOf="@+id/additionalRatings">
 
             <Button
                 android:id="@+id/details"

@@ -35,4 +35,13 @@ public class Rating implements Entity {
      */
     private Map<String, Boolean> likes;
     private Date creationDate;
+
+    //Placepicker
+    private String Coordinates;
+    private String PlaceName;
+
+    //Adv Rating
+    private int bitterness;
+    private int headacheFactor;
+    private String aroma;
 }
