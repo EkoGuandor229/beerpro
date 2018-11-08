@@ -38,6 +38,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:17.1.0'
     implementation 'com.firebaseui:firebase-ui-firestore:4.0.0'
 
+    // google maps stuff
+    implementation 'com.google.android.gms:play-services-places:15.0.0'
+
     // an alternative to picasso
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'com.google.firebase:firebase-auth:11.6.0'
